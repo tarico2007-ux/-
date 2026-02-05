@@ -36,15 +36,26 @@
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        import React, { useState, useEffect } from 'react';
+        import React, { useState, useEffect, useRef } from 'react';
         import { createRoot } from 'react-dom/client';
-        import { ChevronRight, Star, MapPin, Phone, Instagram, ArrowRight, Menu, X, Check } from 'lucide-react';
+        import { ChevronRight, ChevronLeft, Star, MapPin, Phone, Instagram, ArrowRight, Menu, X, Check } from 'lucide-react';
+
+        /* --- ДАННЫЕ ВРАЧЕЙ --- */
+        const doctorsData = [
+            { id: 1, name: "Каргина Ольга Александровна", role: "Врач косметолог-дерматолог", exp: "Стаж более 18 лет", img: "doc1.jpg" },
+            { id: 2, name: "Гаевская Марина Александровна", role: "Врач-косметолог. Высшая категория", exp: "Стаж более 32 лет", img: "doc2.jpg" },
+            { id: 3, name: "Гришина Валерия Борисовна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 11 лет", img: "doc3.jpg" },
+            { id: 4, name: "Кокчян Ануш Артаковна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 8 лет", img: "doc4.jpg" },
+            { id: 5, name: "Бойченко Ирина Анатольевна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 25 лет", img: "doc5.jpg" },
+            { id: 6, name: "Арутюнян Анаит Вачиковна", role: "Косметолог-эстетист", exp: "Эстетическая косметология", img: "doc6.jpg" },
+            { id: 7, name: "Сазыкина Мария Евгеньевна", role: "Косметолог-эстетист", exp: "Эстетическая косметология", img: "doc7.jpg" }
+        ];
 
         /* --- КОМПОНЕНТЫ --- */
 
         const ServiceCard = ({ title, desc, price, tags, onEnter, onLeave }) => (
             <div 
-                className="group bg-white p-8 rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-red-100 relative overflow-hidden flex flex-col h-full"
+                className="group bg-white p-6 md:p-8 rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-red-100 relative overflow-hidden flex flex-col h-full"
                 onMouseEnter={onEnter}
                 onMouseLeave={onLeave}
             >
@@ -53,15 +64,15 @@
                     <ArrowRight size={20} className="text-[#C42323]" />
                 </div>
                 <div className="relative z-10 flex flex-col h-full">
-                    <div className="flex gap-2 mb-6">
+                    <div className="flex gap-2 mb-4 md:mb-6">
                         {tags.map((tag, i) => (
-                        <span key={i} className="text-[10px] font-bold font-montserrat uppercase tracking-wider bg-[#F5F1EE] px-3 py-1 rounded-full text-gray-500 group-hover:text-[#C42323] transition-colors">
+                        <span key={i} className="text-[10px] font-bold font-montserrat uppercase tracking-wider bg-[#F5F1EE] px-2 py-1 md:px-3 rounded-full text-gray-500 group-hover:text-[#C42323] transition-colors">
                             {tag}
                         </span>
                         ))}
                     </div>
-                    <h3 className="font-montserrat font-bold text-2xl text-[#333333] mb-3 group-hover:text-[#C42323] transition-colors">{title}</h3>
-                    <p className="font-manrope text-sm text-gray-500 mb-8 leading-relaxed">{desc}</p>
+                    <h3 className="font-montserrat font-bold text-xl md:text-2xl text-[#333333] mb-3 group-hover:text-[#C42323] transition-colors">{title}</h3>
+                    <p className="font-manrope text-sm text-gray-500 mb-6 md:mb-8 leading-relaxed">{desc}</p>
                     <div className="mt-auto">
                         <span className="font-montserrat font-bold text-lg text-[#333333]">{price}</span>
                     </div>
@@ -71,11 +82,11 @@
 
         const DoctorCard = ({ name, role, exp, imageSrc, onEnter, onLeave }) => (
             <div 
-                className="group cursor-pointer"
+                className="group cursor-pointer h-full"
                 onMouseEnter={onEnter}
                 onMouseLeave={onLeave}
             >
-                <div className="relative overflow-hidden rounded-[30px] mb-6 aspect-[3/4] bg-[#F5F1EE]">
+                <div className="relative overflow-hidden rounded-[20px] md:rounded-[30px] mb-4 md:mb-6 aspect-[3/4] bg-[#F5F1EE]">
                     {imageSrc ? (
                         <img 
                             src={imageSrc} 
@@ -86,20 +97,102 @@
                     ) : null}
                     
                     <div className="w-full h-full bg-gray-200 absolute top-0 left-0 flex items-end justify-center" style={{display: imageSrc ? 'none' : 'flex'}}>
-                         <span className="text-gray-400 font-manrope text-sm mb-10 pb-10">Фото загружается...</span>
+                         <span className="text-gray-400 font-manrope text-xs md:text-sm mb-10 pb-10">Фото...</span>
                     </div>
                     
-                    <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-[20px] shadow-sm transform translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
-                        <div className="flex items-center justify-center gap-2 text-[#C42323] font-montserrat font-bold text-sm">
+                    <div className="absolute bottom-2 left-2 right-2 md:bottom-4 md:left-4 md:right-4 bg-white/90 backdrop-blur-md p-3 md:p-4 rounded-[15px] md:rounded-[20px] shadow-sm transform translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
+                        <div className="flex items-center justify-center gap-2 text-[#C42323] font-montserrat font-bold text-xs md:text-sm">
                             Записаться <ChevronRight size={16} />
                         </div>
                     </div>
                 </div>
-                <h3 className="font-montserrat font-bold text-lg text-[#333333] mb-1 group-hover:text-[#C42323] transition-colors">{name}</h3>
-                <p className="font-manrope text-sm text-[#C42323] mb-1">{role}</p>
-                <p className="font-manrope text-xs text-gray-500">{exp}</p>
+                <h3 className="font-montserrat font-bold text-sm md:text-lg text-[#333333] mb-1 group-hover:text-[#C42323] transition-colors leading-tight">{name}</h3>
+                <p className="font-manrope text-xs md:text-sm text-[#C42323] mb-1">{role}</p>
+                <p className="font-manrope text-[10px] md:text-xs text-gray-500">{exp}</p>
             </div>
         );
+
+        // --- СЛАЙДЕР ВРАЧЕЙ (2 карточки на моб, 4 на ПК) ---
+        const DoctorSlider = ({ doctors, onEnter, onLeave }) => {
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [itemsPerPage, setItemsPerPage] = useState(4);
+
+            useEffect(() => {
+                const handleResize = () => {
+                    // Если экран меньше 1024px -> ставим 2 карточки (и для моб, и для планшетов)
+                    if (window.innerWidth < 1024) setItemsPerPage(2);
+                    else setItemsPerPage(4);
+                };
+                handleResize();
+                window.addEventListener('resize', handleResize);
+                return () => window.removeEventListener('resize', handleResize);
+            }, []);
+
+            const nextSlide = () => {
+                if (currentIndex < doctors.length - itemsPerPage) {
+                    setCurrentIndex(prev => prev + 1);
+                }
+            };
+
+            const prevSlide = () => {
+                if (currentIndex > 0) {
+                    setCurrentIndex(prev => prev - 1);
+                }
+            };
+
+            const isEnd = currentIndex >= doctors.length - itemsPerPage;
+            const isStart = currentIndex === 0;
+
+            return (
+                <div className="relative group/slider">
+                    {/* Кнопки навигации */}
+                    <div className="absolute top-1/2 -left-4 md:-left-12 -translate-y-1/2 z-20 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100 transition-opacity">
+                        <button 
+                            onClick={prevSlide}
+                            disabled={isStart}
+                            className={`p-2 md:p-3 rounded-full shadow-lg bg-white text-[#C42323] hover:bg-[#C42323] hover:text-white transition-all disabled:opacity-0 disabled:cursor-not-allowed`}
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+                    </div>
+                    <div className="absolute top-1/2 -right-4 md:-right-12 -translate-y-1/2 z-20 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100 transition-opacity">
+                        <button 
+                            onClick={nextSlide}
+                            disabled={isEnd}
+                            className={`p-2 md:p-3 rounded-full shadow-lg bg-white text-[#C42323] hover:bg-[#C42323] hover:text-white transition-all disabled:opacity-0 disabled:cursor-not-allowed`}
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+
+                    {/* Окно слайдера */}
+                    <div className="overflow-hidden p-2 -m-2">
+                        <div 
+                            className="flex transition-transform duration-500 ease-in-out"
+                            style={{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}
+                        >
+                            {doctors.map((doc) => (
+                                <div 
+                                    key={doc.id} 
+                                    className="flex-shrink-0 px-2 md:px-3 box-border"
+                                    style={{ width: `${100 / itemsPerPage}%` }}
+                                >
+                                    <DoctorCard 
+                                        name={doc.name} 
+                                        role={doc.role} 
+                                        exp={doc.exp} 
+                                        imageSrc={doc.img} 
+                                        onEnter={onEnter} 
+                                        onLeave={onLeave} 
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
 
         const App = () => {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -247,65 +340,9 @@
                 {/* --- DOCTORS --- */}
                 <section className="py-24 bg-white" id="врачи">
                     <div className="container mx-auto px-4 md:px-8">
-                    <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333] mb-16">ЭКСПЕРТИЗА В ЛИЦАХ</h2>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        {/* 1. Каргина */}
-                        <DoctorCard 
-                            name="Каргина Ольга Александровна" 
-                            role="Врач косметолог-дерматолог" 
-                            exp="Стаж более 18 лет" 
-                            imageSrc="doc1.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                        {/* 2. Гаевская */}
-                        <DoctorCard 
-                            name="Гаевская Марина Александровна" 
-                            role="Врач-косметолог" 
-                            exp="Высшая категория" 
-                            imageSrc="doc2.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                        {/* 3. Гришина */}
-                        <DoctorCard 
-                            name="Гришина Валерия Борисовна" 
-                            role="Врач-косметолог, дерматолог" 
-                            exp="Стаж более 11 лет" 
-                            imageSrc="doc3.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                        {/* 4. Кокчян */}
-                        <DoctorCard 
-                            name="Кокчян Ануш Артаковна" 
-                            role="Врач-косметолог, дерматолог" 
-                            exp="Стаж более 8 лет" 
-                            imageSrc="doc4.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                        {/* 5. Бойченко */}
-                        <DoctorCard 
-                            name="Бойченко Ирина Анатольевна" 
-                            role="Врач-косметолог, дерматолог" 
-                            exp="Стаж более 25 лет" 
-                            imageSrc="doc5.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                        {/* 6. Арутюнян */}
-                        <DoctorCard 
-                            name="Арутюнян Анаит Вачиковна" 
-                            role="Косметолог-эстетист" 
-                            exp="Эстетическая косметология" 
-                            imageSrc="doc6.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                        {/* 7. Сазыкина */}
-                        <DoctorCard 
-                            name="Сазыкина Мария Евгеньевна" 
-                            role="Косметолог-эстетист" 
-                            exp="Эстетическая косметология" 
-                            imageSrc="doc7.jpg" 
-                            onEnter={textEnter} onLeave={textLeave} 
-                        />
-                    </div>
+                        <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333] mb-16">ЭКСПЕРТИЗА В ЛИЦАХ</h2>
+                        {/* Используем наш новый СЛАЙДЕР */}
+                        <DoctorSlider doctors={doctorsData} onEnter={textEnter} onLeave={textLeave} />
                     </div>
                 </section>
 
