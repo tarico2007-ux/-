@@ -3,93 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Гаевская М.Н. - ExpertMed</title>
+    <title>Гаевская Марина Николаевна - ExpertMed</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "react": "https://esm.sh/react@18.2.0",
+                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+                "lucide-react": "https://esm.sh/lucide-react@0.263.1"
+            }
+        }
+    </script>
+    <script type="module" src="https://esm.sh/run-css"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <style>
-        body { margin: 0; font-family: 'Manrope', sans-serif; color: #333; }
+        body { margin: 0; font-family: 'Manrope', sans-serif; }
         .font-montserrat { font-family: 'Montserrat', sans-serif; }
-        .text-red-brand { color: #C42323; }
-        .bg-red-brand { background-color: #C42323; }
+        .font-manrope { font-family: 'Manrope', sans-serif; }
+        
+        .expert-cursor {
+            position: fixed; top: 0; left: 0; height: 12px; width: 12px;
+            background-color: #C42323; border-radius: 50%; pointer-events: none;
+            z-index: 9999; transform: translate(-50%, -50%); transition: height 0.3s, width 0.3s;
+        }
+        .expert-cursor.text {
+            height: 32px; width: 32px; background-color: rgba(196, 35, 35, 0.2); border: 1px solid #C42323;
+        }
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F5F1EE; }
+        ::-webkit-scrollbar-thumb { background: #C42323; border-radius: 4px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur py-4 shadow-sm">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <a href="index.html" class="flex flex-col leading-none">
-                <span class="font-montserrat font-bold text-2xl text-red-brand">expertmed</span>
-                <span class="font-montserrat text-xs tracking-widest">КОСМЕТОЛОГИЯ</span>
-            </a>
-            <a href="index.html" class="flex items-center gap-2 font-bold hover:text-red-brand transition">
-                <i data-lucide="arrow-left"></i> Назад на главную
-            </a>
-        </div>
-    </header>
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            ChevronRight, Star, MapPin, Phone, ArrowRight, Menu, X, Check, 
+            ArrowLeft, Calendar, Shield, Activity, Sparkles, Microscope, 
+            GraduationCap, Play, Clock, Heart, MessageCircle, ChevronDown
+        } from 'lucide-react';
 
-    <main class="pt-24 pb-12">
-        <div class="container mx-auto px-4">
-            
-            <div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
-                <div class="order-2 lg:order-1">
-                    <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold text-red-brand uppercase mb-4 inline-block">Top Expert</span>
-                    <h1 class="font-montserrat font-extrabold text-4xl md:text-6xl mb-6 leading-tight">
-                        Гаевская <br> Марина <br> <span class="text-red-brand">Николаевна</span>
-                    </h1>
-                    <div class="border-l-4 border-red-brand pl-4 mb-8">
-                        <p class="text-xl font-bold">Врач-дерматовенеролог</p>
-                        <p class="text-gray-500">Косметолог, высшая категория</p>
+        /* --- ВСПОМОГАТЕЛЬНЫЙ КОМПОНЕНТ: ГРУППА УСЛУГ --- */
+        const ServiceGroup = ({ title, icon, items }) => (
+            <div className="bg-white border border-gray-100 p-8 rounded-[30px] hover:shadow-lg transition-all duration-300">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-[#F5F1EE] rounded-full flex items-center justify-center text-[#C42323]">
+                        {icon}
                     </div>
-                    <p class="text-lg text-gray-600 mb-8">
-                        «Моя цель — не изменить вас до неузнаваемости, а раскрыть ресурс вашей кожи. Я работаю с лицом как с единой системой».
-                    </p>
-                    <div class="flex items-center gap-8">
+                    <h3 className="font-montserrat font-bold text-lg text-[#333333]">{title}</h3>
+                </div>
+                <ul className="space-y-4">
+                    {items.map((item, idx) => (
+                        <li key={idx} className="flex justify-between items-end border-b border-gray-50 border-dashed pb-2">
+                            <span className="font-manrope text-sm text-gray-600">{item.name}</span>
+                            <span className="font-montserrat font-bold text-sm text-[#333333] whitespace-nowrap ml-4">{item.price}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+
+        /* --- ФУТЕР --- */
+        const Footer = () => (
+            <footer className="bg-[#333333] text-white py-16 border-t border-gray-800 pb-24 md:pb-16">
+                <div className="container mx-auto px-4 md:px-8">
+                    <div className="flex flex-col md:flex-row justify-between items-start mb-12">
                         <div>
-                            <p class="font-montserrat font-bold text-3xl">32+</p>
-                            <p class="text-xs text-gray-400 uppercase">Года стажа</p>
+                            <span className="font-montserrat font-bold text-3xl tracking-tight">expertmed</span>
+                            <p className="text-gray-400 font-manrope text-sm mt-4">Лицензия Л041-01166-58</p>
                         </div>
-                        <a href="#form" class="bg-red-brand text-white font-montserrat font-bold px-8 py-4 rounded-2xl hover:bg-red-700 transition shadow-lg shadow-red-200">
-                            Записаться
-                        </a>
+                        <div className="text-right hidden md:block">
+                            <p className="font-montserrat font-bold">ул. Кирова, 67</p>
+                            <p className="font-manrope text-gray-400">709-111</p>
+                        </div>
+                    </div>
+                    <div className="pt-8 border-t border-gray-800 text-xs text-gray-500 font-manrope">
+                        © 2025 EXPERTMED. ИМЕЮТСЯ ПРОТИВОПОКАЗАНИЯ. НЕОБХОДИМА КОНСУЛЬТАЦИЯ СПЕЦИАЛИСТА
                     </div>
                 </div>
-                <div class="order-1 lg:order-2">
-                    <div class="rounded-[40px] overflow-hidden shadow-2xl aspect-[3/4] relative bg-gray-100">
-                        <img src="doc2.jpg" alt="Гаевская М.Н." class="w-full h-full object-cover">
+            </footer>
+        );
+
+        /* --- ОСНОВНОЕ ПРИЛОЖЕНИЕ (Страница Гаевской) --- */
+        const App = () => {
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+            const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+            const [cursorVariant, setCursorVariant] = useState("default");
+            const [openFaq, setOpenFaq] = useState(null);
+
+            // Эффекты (скролл, мышь)
+            useEffect(() => {
+                const mouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
+                window.addEventListener("mousemove", mouseMove);
+                return () => window.removeEventListener("mousemove", mouseMove);
+            }, []);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const textEnter = () => setCursorVariant("text");
+            const textLeave = () => setCursorVariant("default");
+            const toggleFaq = (index) => setOpenFaq(openFaq === index ? null : index);
+
+            return (
+                <div className="font-manrope text-[#333333] bg-white overflow-x-hidden selection:bg-[#C42323] selection:text-white relative">
+                    
+                    {/* Курсор */}
+                    <div className={`expert-cursor hidden md:block ${cursorVariant}`} style={{ left: `${mousePosition.x}px`, top: `${mousePosition.y}px` }} />
+
+                    {/* HEADER */}
+                    <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-6'}`}>
+                        <div className="container mx-auto px-4 md:px-8 flex justify-between items-center">
+                            <a href="index.html" className="flex flex-col leading-none cursor-pointer" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                                <span className="font-montserrat font-bold text-2xl md:text-3xl text-[#C42323] tracking-tight">expertmed</span>
+                                <span className="font-montserrat text-xs md:text-sm text-[#333333] tracking-widest text-center mt-1">КОСМЕТОЛОГИЯ</span>
+                            </a>
+
+                            <nav className="hidden lg:flex items-center gap-8 font-montserrat font-medium text-sm">
+                                <a href="index.html" className="cursor-pointer hover:text-[#C42323] transition-colors">Главная</a>
+                                <span className="text-[#C42323] font-bold relative cursor-default">Врачи <span className="absolute -bottom-2 left-0 w-full h-0.5 bg-[#C42323]"></span></span>
+                                <a href="index.html#услуги" className="hover:text-[#C42323] transition-colors">Услуги</a>
+                                <a href="index.html#прайс" className="hover:text-[#C42323] transition-colors">Прайс</a>
+                                <a href="index.html#контакты" className="hover:text-[#C42323] transition-colors">Контакты</a>
+                            </nav>
+
+                            <div className="hidden lg:flex items-center gap-6">
+                                <a href="tel:709111" className="font-manrope font-semibold hover:text-[#C42323]">709-111</a>
+                                <button className="bg-[#C42323] text-white font-montserrat font-medium px-6 py-3 rounded-[20px] hover:bg-[#a01c1c] transition-all transform hover:scale-105 shadow-lg shadow-red-200">Записаться</button>
+                            </div>
+                            
+                            <button className="lg:hidden text-[#333333]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Mobile Menu */}
+                    {isMenuOpen && (
+                        <div className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8 pt-20 animate-fade-in">
+                            <a href="index.html" className="font-montserrat text-2xl font-bold text-[#333333]">Главная</a>
+                            <span className="font-montserrat text-2xl font-bold text-[#C42323]">Врачи</span>
+                            <button className="bg-[#C42323] text-white font-montserrat font-medium px-8 py-4 rounded-[20px] text-lg">Записаться</button>
+                        </div>
+                    )}
+
+                    {/* --- MAIN CONTENT (Doctor Page) --- */}
+                    <div className="pt-24 min-h-screen bg-white animate-fade-in">
+                        
+                        {/* Хлебные крошки */}
+                        <div className="container mx-auto px-4 md:px-8 mb-6">
+                            <div className="flex items-center gap-2 text-sm text-gray-400 font-manrope">
+                                <a href="index.html" className="cursor-pointer hover:text-[#C42323] transition-colors">Главная</a>
+                                <ChevronRight size={14} />
+                                <span className="cursor-pointer hover:text-[#C42323] transition-colors">Врачи</span>
+                                <ChevronRight size={14} />
+                                <span className="text-[#333333] font-medium">Гаевская М.Н.</span>
+                            </div>
+                        </div>
+
+                        {/* HERO SECTION */}
+                        <section className="container mx-auto px-4 md:px-8 mb-24">
+                            <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+                                {/* Text Content */}
+                                <div className="order-2 lg:order-1">
+                                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#F5F1EE] rounded-full text-[#C42323] font-bold font-montserrat text-xs tracking-widest uppercase mb-8">
+                                        <Star size={14} fill="#C42323" /> Top Expert
+                                    </div>
+                                    <h1 className="font-montserrat font-extrabold text-4xl md:text-6xl text-[#333333] mb-6 leading-[1.1] uppercase">
+                                        Гаевская <br/> Марина <br/> <span className="text-[#C42323]">Николаевна</span>
+                                    </h1>
+                                    <div className="flex gap-4 mb-8">
+                                        <div className="pl-4 border-l-2 border-[#C42323]">
+                                            <p className="font-manrope text-lg font-semibold text-[#333333]">Врач-дерматовенеролог</p>
+                                            <p className="font-manrope text-sm text-gray-500">Косметолог</p>
+                                        </div>
+                                    </div>
+                                    <p className="font-manrope text-lg text-gray-600 mb-10 leading-relaxed max-w-md">
+                                        «Моя цель — не изменить вас до неузнаваемости, а раскрыть ресурс вашей кожи. Я работаю с лицом как с единой системой, где каждый штрих имеет значение».
+                                    </p>
+                                    <div className="flex flex-wrap gap-8 items-center">
+                                        <div className="hidden md:block">
+                                            <p className="font-montserrat font-bold text-3xl text-[#333333]">32+</p>
+                                            <p className="text-xs text-gray-400 uppercase tracking-widest">Года опыта</p>
+                                        </div>
+                                        <div className="hidden md:block w-px h-12 bg-gray-200"></div>
+                                        <div className="hidden md:block">
+                                            <p className="font-montserrat font-bold text-3xl text-[#333333]">Top 3</p>
+                                            <p className="text-xs text-gray-400 uppercase tracking-widest">Рейтинг</p>
+                                        </div>
+                                        <button className="bg-[#C42323] text-white font-montserrat font-bold px-10 py-5 rounded-[20px] hover:bg-[#a01c1c] transition-all shadow-xl shadow-red-200 flex items-center gap-3 w-full md:w-auto justify-center" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                                            Записаться на прием
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Image Content */}
+                                <div className="order-1 lg:order-2 relative">
+                                    <div className="relative z-10 rounded-[40px] overflow-hidden aspect-[3/4] shadow-2xl group">
+                                        <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-end justify-center">
+                                            {/* ФОТО ГАЕВСКОЙ */}
+                                            <img src="doc2.jpg" className="w-full h-full object-cover" onError={(e) => {e.target.style.display='none'; e.target.nextSibling.style.display='flex'}} />
+                                            <div className="w-full h-full absolute inset-0 bg-[#333333]/5 hidden"></div>
+                                            <span className="mb-20 text-gray-400 font-manrope font-medium text-lg hidden">Фото Гаевской</span>
+                                        </div>
+                                        <div className="absolute bottom-8 right-8 bg-white/30 backdrop-blur-md border border-white/40 p-2 rounded-full cursor-pointer hover:scale-110 transition-transform group-hover:bg-white group-hover:text-[#C42323] text-white">
+                                            <div className="w-16 h-16 bg-[#C42323] rounded-full flex items-center justify-center shadow-lg group-hover:bg-white group-hover:text-[#C42323] transition-colors">
+                                                <Play fill="currentColor" size={24} className="ml-1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="absolute top-10 -right-10 w-full h-full border-2 border-[#F5F1EE] rounded-[40px] -z-0"></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* VIDEO / PHILOSOPHY SECTION */}
+                        <section className="bg-[#333333] py-24 text-white overflow-hidden relative">
+                            <div className="container mx-auto px-4 md:px-8 relative z-10">
+                                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                                    <div className="relative">
+                                        <div className="aspect-video bg-gray-800 rounded-[30px] border border-gray-700 flex items-center justify-center relative cursor-pointer group overflow-hidden">
+                                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                                            <div className="w-20 h-20 bg-white/10 backdrop-blur rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"><Play fill="white" size={32} className="ml-1" /></div>
+                                            <span className="absolute bottom-6 left-6 font-montserrat font-bold text-sm tracking-widest">СМОТРЕТЬ ВИДЕО-ВИЗИТКУ</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <Sparkles className="text-[#C42323] mb-6 h-8 w-8" />
+                                        <h2 className="font-montserrat font-extrabold text-3xl md:text-4xl mb-6">"Я ЗА ЕСТЕСТВЕННОСТЬ,<br/> КОТОРАЯ ВОСХИЩАЕТ"</h2>
+                                        <p className="font-manrope text-gray-400 text-lg mb-8 leading-relaxed">Современная косметология — это не про "надутые" губы, а про качество кожи, четкий овал и сияющий взгляд. В своей практике я использую только проверенные протоколы Fotona 4D и BBL.</p>
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex items-center gap-4"><div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-[#C42323]"><Shield size={20}/></div><div><p className="font-bold font-montserrat">Безопасность</p><p className="text-sm text-gray-500">Только сертифицированные препараты</p></div></div>
+                                            <div className="flex items-center gap-4"><div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-[#C42323]"><GraduationCap size={20}/></div><div><p className="font-bold font-montserrat">Непрерывное обучение</p><p className="text-sm text-gray-500">32 года медицинской практики</p></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* EDUCATION */}
+                        <section className="py-24 bg-white">
+                            <div className="container mx-auto px-4 md:px-8">
+                                <div className="max-w-4xl mx-auto">
+                                    <h2 className="font-montserrat font-extrabold text-3xl md:text-4xl text-[#333333] mb-12 text-center">ОБРАЗОВАНИЕ И КВАЛИФИКАЦИЯ</h2>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                                        {[1,2,3,4].map((i) => (
+                                            <div key={i} className="aspect-[3/4] bg-[#F5F1EE] rounded-[20px] relative group overflow-hidden cursor-pointer border border-gray-100 hover:border-red-100 transition-colors">
+                                                <div className="absolute inset-0 flex items-center justify-center p-4 text-center"><div className="w-full h-full bg-white shadow-sm flex items-center justify-center text-[10px] text-gray-400 font-manrope">СЕРТИФИКАТ <br/> FOTONA EXPERT</div></div>
+                                                <div className="absolute inset-0 bg-[#C42323]/90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold text-sm">Смотреть</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="bg-[#F5F1EE] rounded-[30px] p-8 md:p-12">
+                                        <ul className="space-y-6">
+                                            <li className="flex gap-4 items-start"><div className="mt-1 min-w-[60px] font-montserrat font-bold text-[#C42323]">1991</div><div><h4 className="font-bold text-[#333333]">Саратовский государственный медицинский университет</h4><p className="text-sm text-gray-500">Лечебное дело, Базовое образование</p></div></li>
+                                            <li className="flex gap-4 items-start"><div className="mt-1 min-w-[60px] font-montserrat font-bold text-[#C42323]">1993</div><div><h4 className="font-bold text-[#333333]">Интернатура по дерматовенерологии</h4><p className="text-sm text-gray-500">Пензенский институт усовершенствования врачей</p></div></li>
+                                            <li className="flex gap-4 items-start"><div className="mt-1 min-w-[60px] font-montserrat font-bold text-[#C42323]">2020</div><div><h4 className="font-bold text-[#333333]">Повышение квалификации "Косметология"</h4><p className="text-sm text-gray-500">Регулярное подтверждение сертификата</p></div></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* WORKFLOW */}
+                        <section className="py-24 bg-[#F5F1EE]">
+                            <div className="container mx-auto px-4 md:px-8">
+                                <h2 className="font-montserrat font-extrabold text-3xl md:text-4xl text-[#333333] mb-16 text-center">КАК ПРОХОДИТ МОЙ ПРИЕМ</h2>
+                                <div className="grid md:grid-cols-4 gap-8">
+                                    {[
+                                        { icon: MessageCircle, step: "01", title: "Консультация", desc: "Выслушаю ваши пожелания, соберу анамнез." },
+                                        { icon: Microscope, step: "02", title: "Диагностика", desc: "Оценка состояния кожи под увеличением." },
+                                        { icon: Sparkles, step: "03", title: "Процедура", desc: "Бережное выполнение манипуляций." },
+                                        { icon: Heart, step: "04", title: "Поддержка", desc: "Дам рекомендации по домашнему уходу." },
+                                    ].map((item, i) => (
+                                        <div key={i} className="relative group">
+                                            <div className="font-montserrat font-extrabold text-6xl text-white absolute -top-10 -left-4 z-0 group-hover:text-[#C42323]/10 transition-colors">{item.step}</div>
+                                            <div className="relative z-10 bg-white p-8 rounded-[30px] shadow-sm h-full hover:-translate-y-2 transition-transform duration-300">
+                                                <div className="w-12 h-12 bg-[#F5F1EE] rounded-full flex items-center justify-center text-[#C42323] mb-6"><item.icon size={24} /></div>
+                                                <h3 className="font-montserrat font-bold text-lg mb-3">{item.title}</h3>
+                                                <p className="text-sm text-gray-500 font-manrope">{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* SERVICES & PRICES */}
+                        <section className="py-24 bg-white">
+                            <div className="container mx-auto px-4 md:px-8">
+                                <div className="flex flex-col md:flex-row justify-between items-end mb-12">
+                                    <div><span className="font-montserrat font-bold text-[#C42323] text-sm uppercase tracking-widest mb-2 block">Экспертиза</span><h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333]">УСЛУГИ И ЦЕНЫ</h2></div>
+                                    <p className="text-gray-400 text-sm font-manrope max-w-xs mt-4 md:mt-0">Цены указаны в ознакомительных целях.</p>
+                                </div>
+                                <div className="grid lg:grid-cols-2 gap-8">
+                                    <ServiceGroup title="Лазерные технологии (Fotona)" icon={<Sparkles size={20}/>} items={[{ name: "4D Омоложение (Лицо полностью)", price: "от 31 800 ₽" }, { name: "Лазерная шлифовка рубцов", price: "от 4 000 ₽" }, { name: "Лечение сосудов / розацеа", price: "от 5 000 ₽" }, { name: "Лечение храпа NightLase", price: "от 9 500 ₽" }]} />
+                                    <ServiceGroup title="Фототерапия (BBL Hero)" icon={<Star size={20}/>} items={[{ name: "BBL Forever Young (Лицо)", price: "от 18 000 ₽" }, { name: "Удаление пигментации (зонально)", price: "от 6 000 ₽" }, { name: "Лечение акне BBL", price: "от 4 000 ₽" }]} />
+                                    <ServiceGroup title="Инъекционная косметология" icon={<Activity size={20}/>} items={[{ name: "Ботулинотерапия (Full Face)", price: "Индивидуально" }, { name: "Контурная пластика губ (Премиум)", price: "от 16 500 ₽" }, { name: "Биоревитализация (Novacutan, Profhilo)", price: "от 14 000 ₽" }]} />
+                                    <ServiceGroup title="Трихология и Дерматология" icon={<Microscope size={20}/>} items={[{ name: "Консультация дерматолога", price: "2 000 ₽" }, { name: "Лазерное лечение алопеции (Fotona)", price: "от 4 500 ₽" }, { name: "Лечение гипергидроза (подмышки)", price: "от 25 000 ₽" }]} />
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* FAQ */}
+                        <section className="py-24 bg-[#F5F1EE]">
+                            <div className="container mx-auto px-4 md:px-8 max-w-4xl">
+                                <h2 className="font-montserrat font-extrabold text-3xl md:text-4xl text-[#333333] mb-12 text-center">ЧАСТЫЕ ВОПРОСЫ</h2>
+                                <div className="space-y-4">
+                                    {[{ q: "Больно ли делать Fotona 4D?", a: "Процедура переносится комфортно. Ощущается лишь интенсивное тепло." }, { q: "Как долго проходит реабилитация после лазера?", a: "В зависимости от режима. При 4D омоложении реабилитация занимает 2-3 дня." }, { q: "С какого возраста можно начинать процедуры?", a: "Лечение акне — по показаниям с подросткового возраста." }].map((item, i) => (
+                                        <div key={i} className="bg-white rounded-[20px] overflow-hidden shadow-sm">
+                                            <button onClick={() => toggleFaq(i)} className="w-full text-left p-6 flex justify-between items-center font-montserrat font-bold text-[#333333] hover:text-[#C42323] transition-colors">{item.q} <ChevronDown className={`transition-transform duration-300 ${openFaq === i ? 'rotate-180 text-[#C42323]' : ''}`} /></button>
+                                            <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-48' : 'max-h-0'}`}><p className="p-6 pt-0 text-gray-500 font-manrope text-sm leading-relaxed border-t border-gray-100 mt-2">{item.a}</p></div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* REVIEWS */}
+                        <section className="py-24 bg-white">
+                            <div className="container mx-auto px-4 md:px-8">
+                                <h2 className="font-montserrat font-extrabold text-3xl md:text-4xl text-[#333333] mb-12 text-center">ОТЗЫВЫ ПАЦИЕНТОВ</h2>
+                                <div className="grid md:grid-cols-3 gap-8">
+                                    {[1, 2, 3].map((i) => (
+                                        <div key={i} className="bg-[#F5F1EE] p-8 rounded-[30px] relative">
+                                            <div className="text-[#C42323] text-4xl font-serif absolute top-6 left-6">“</div>
+                                            <p className="text-gray-600 font-manrope text-sm italic mb-6 mt-6 leading-relaxed">«Марина Николаевна — врач от Бога. Лечили акне полгода, результат превзошел ожидания. Кожа чистая, без рубцов. Очень деликатный подход!»</p>
+                                            <div className="flex items-center gap-3"><div className="w-10 h-10 bg-gray-300 rounded-full"></div><div><p className="font-bold font-montserrat text-xs">Анна К.</p><p className="text-[10px] text-gray-400">Процедура: Лечение акне</p></div></div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="text-center mt-12"><button className="text-[#C42323] font-bold font-montserrat border-b border-[#C42323] hover:text-[#333333] hover:border-[#333333] transition-all">Смотреть все отзывы на ПроДокторов</button></div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <Footer />
+                    
+                    {/* Sticky Mobile Button */}
+                    <div className="fixed bottom-4 left-4 right-4 md:hidden z-40">
+                        <button className="w-full bg-[#C42323] text-white font-montserrat font-bold py-4 rounded-[20px] shadow-2xl shadow-red-900/20 flex items-center justify-center gap-2"><Calendar size={20} /> Записаться к врачу</button>
                     </div>
                 </div>
-            </div>
+            );
+        };
 
-            <div class="max-w-4xl mx-auto">
-                <h2 class="font-montserrat font-extrabold text-3xl text-center mb-12">УСЛУГИ И ЦЕНЫ</h2>
-                <div class="bg-gray-50 rounded-[30px] p-8">
-                    <ul class="space-y-4">
-                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
-                            <span>4D Омоложение (Fotona)</span>
-                            <span class="font-bold">от 31 800 ₽</span>
-                        </li>
-                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
-                            <span>BBL Forever Young</span>
-                            <span class="font-bold">от 18 000 ₽</span>
-                        </li>
-                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
-                            <span>Контурная пластика губ</span>
-                            <span class="font-bold">от 16 500 ₽</span>
-                        </li>
-                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
-                            <span>Биоревитализация</span>
-                            <span class="font-bold">от 14 000 ₽</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-    </main>
-
-    <script>
-        lucide.createIcons();
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
