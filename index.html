@@ -7,8 +7,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script type="importmap">
@@ -29,24 +27,14 @@
         .font-manrope { font-family: 'Manrope', sans-serif; }
         
         .expert-cursor {
-            position: fixed;
-            top: 0; left: 0;
-            height: 12px; width: 12px;
-            background-color: #C42323;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: height 0.3s, width 0.3s;
+            position: fixed; top: 0; left: 0; height: 12px; width: 12px;
+            background-color: #C42323; border-radius: 50%; pointer-events: none;
+            z-index: 9999; transform: translate(-50%, -50%); transition: height 0.3s, width 0.3s;
         }
         .expert-cursor.text {
-            height: 32px; width: 32px;
-            background-color: rgba(196, 35, 35, 0.2);
-            border: 1px solid #C42323;
+            height: 32px; width: 32px; background-color: rgba(196, 35, 35, 0.2); border: 1px solid #C42323;
         }
         html { scroll-behavior: smooth; }
-        
-        /* Скрываем скроллбар для слайдера */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -59,22 +47,25 @@
         import { createRoot } from 'react-dom/client';
         import { ChevronRight, ChevronLeft, Star, MapPin, Phone, Instagram, ArrowRight, Menu, X, Check } from 'lucide-react';
 
-        /* --- ДАННЫЕ ВРАЧЕЙ --- */
+        /* --- БАЗА ДАННЫХ ВРАЧЕЙ --- 
+           Здесь вы настраиваете ссылки на личные файлы.
+           Если страницы нет, оставляем link: "#"
+        */
         const doctorsData = [
-            { id: 1, name: "Каргина Ольга Александровна", role: "Врач косметолог-дерматолог", exp: "Стаж более 18 лет", img: "doc1.jpg" },
-            { id: 2, name: "Гаевская Марина Александровна", role: "Врач-косметолог", exp: "Высшая категория", img: "doc2.jpg" },
-            { id: 3, name: "Гришина Валерия Борисовна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 11 лет", img: "doc3.jpg" },
-            { id: 4, name: "Кокчян Ануш Артаковна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 8 лет", img: "doc4.jpg" },
-            { id: 5, name: "Бойченко Ирина Анатольевна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 25 лет", img: "doc5.jpg" },
-            { id: 6, name: "Арутюнян Анаит Вачиковна", role: "Косметолог-эстетист", exp: "Эстетическая косметология", img: "doc6.jpg" },
-            { id: 7, name: "Сазыкина Мария Евгеньевна", role: "Косметолог-эстетист", exp: "Эстетическая косметология", img: "doc7.jpg" }
+            { id: 1, name: "Каргина Ольга Александровна", role: "Врач косметолог-дерматолог", exp: "Стаж более 18 лет", img: "doc1.jpg", link: "#" },
+            { id: 2, name: "Гаевская Марина Александровна", role: "Врач-косметолог", exp: "Высшая категория", img: "doc2.jpg", link: "gaevskaya.html" }, /* <-- ССЫЛКА ТУТ */
+            { id: 3, name: "Гришина Валерия Борисовна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 11 лет", img: "doc3.jpg", link: "#" },
+            { id: 4, name: "Кокчян Ануш Артаковна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 8 лет", img: "doc4.jpg", link: "#" },
+            { id: 5, name: "Бойченко Ирина Анатольевна", role: "Врач-косметолог, дерматолог", exp: "Стаж более 25 лет", img: "doc5.jpg", link: "#" },
+            { id: 6, name: "Арутюнян Анаит Вачиковна", role: "Косметолог-эстетист", exp: "Эстетическая косметология", img: "doc6.jpg", link: "#" },
+            { id: 7, name: "Сазыкина Мария Евгеньевна", role: "Косметолог-эстетист", exp: "Эстетическая косметология", img: "doc7.jpg", link: "#" }
         ];
 
         /* --- КОМПОНЕНТЫ --- */
 
         const ServiceCard = ({ title, desc, price, tags, onEnter, onLeave }) => (
             <div 
-                className="group bg-white p-8 rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-red-100 relative overflow-hidden flex flex-col h-full"
+                className="group bg-white p-6 md:p-8 rounded-[30px] shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-red-100 relative overflow-hidden flex flex-col h-full"
                 onMouseEnter={onEnter}
                 onMouseLeave={onLeave}
             >
@@ -83,53 +74,58 @@
                     <ArrowRight size={20} className="text-[#C42323]" />
                 </div>
                 <div className="relative z-10 flex flex-col h-full">
-                    <div className="flex gap-2 mb-6">
+                    <div className="flex gap-2 mb-4 md:mb-6">
                         {tags.map((tag, i) => (
-                        <span key={i} className="text-[10px] font-bold font-montserrat uppercase tracking-wider bg-[#F5F1EE] px-3 py-1 rounded-full text-gray-500 group-hover:text-[#C42323] transition-colors">
+                        <span key={i} className="text-[10px] font-bold font-montserrat uppercase tracking-wider bg-[#F5F1EE] px-2 py-1 md:px-3 rounded-full text-gray-500 group-hover:text-[#C42323] transition-colors">
                             {tag}
                         </span>
                         ))}
                     </div>
-                    <h3 className="font-montserrat font-bold text-2xl text-[#333333] mb-3 group-hover:text-[#C42323] transition-colors">{title}</h3>
-                    <p className="font-manrope text-sm text-gray-500 mb-8 leading-relaxed h-10">{desc}</p>
-                    <div className="flex items-center justify-between mt-auto">
+                    <h3 className="font-montserrat font-bold text-xl md:text-2xl text-[#333333] mb-3 group-hover:text-[#C42323] transition-colors">{title}</h3>
+                    <p className="font-manrope text-sm text-gray-500 mb-6 md:mb-8 leading-relaxed">{desc}</p>
+                    <div className="mt-auto">
                         <span className="font-montserrat font-bold text-lg text-[#333333]">{price}</span>
                     </div>
                 </div>
             </div>
         );
 
-        const DoctorCard = ({ name, role, exp, imageSrc, onEnter, onLeave }) => (
+        /* --- КАРТОЧКА ВРАЧА С КНОПКОЙ "ПОДРОБНЕЕ" --- */
+        const DoctorCard = ({ doc, onEnter, onLeave }) => (
             <div 
                 className="group cursor-pointer h-full"
                 onMouseEnter={onEnter}
                 onMouseLeave={onLeave}
             >
-                <div className="relative overflow-hidden rounded-[30px] mb-6 aspect-[3/4] bg-[#F5F1EE]">
-                    {imageSrc ? (
+                <div className="relative overflow-hidden rounded-[20px] md:rounded-[30px] mb-4 md:mb-6 aspect-[3/4] bg-[#F5F1EE]">
+                    {doc.img ? (
                         <img 
-                            src={imageSrc} 
-                            alt={name} 
+                            src={doc.img} 
+                            alt={doc.name} 
                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             onError={(e) => {e.target.style.display='none'; e.target.nextSibling.style.display='flex'}}
                         />
                     ) : null}
-                    <div className="w-full h-full bg-gray-200 absolute top-0 left-0 flex items-end justify-center" style={{display: imageSrc ? 'none' : 'flex'}}>
-                         <span className="text-gray-400 font-manrope text-sm mb-10 pb-10">Фото...</span>
+                    
+                    <div className="w-full h-full bg-gray-200 absolute top-0 left-0 flex items-end justify-center" style={{display: doc.img ? 'none' : 'flex'}}>
+                         <span className="text-gray-400 font-manrope text-xs md:text-sm mb-10 pb-10">Фото...</span>
                     </div>
-                    <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-[20px] shadow-sm transform translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
-                        <div className="flex items-center justify-center gap-2 text-[#C42323] font-montserrat font-bold text-sm">
-                            Подробнее <ChevronRight size={16} />
-                        </div>
-                    </div>
+                    
+                    {/* КНОПКА-ССЫЛКА */}
+                    <a 
+                        href={doc.link} 
+                        className="absolute bottom-2 left-2 right-2 md:bottom-4 md:left-4 md:right-4 bg-white/90 backdrop-blur-md p-3 md:p-4 rounded-[15px] md:rounded-[20px] shadow-sm transform translate-y-2 opacity-0 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20 hover:bg-[#C42323] hover:text-white group/btn flex items-center justify-center gap-2 text-[#C42323] font-montserrat font-bold text-xs md:text-sm"
+                    >
+                        Подробнее <ChevronRight size={16} />
+                    </a>
                 </div>
-                <h3 className="font-montserrat font-bold text-lg text-[#333333] mb-1 group-hover:text-[#C42323] transition-colors">{name}</h3>
-                <p className="font-manrope text-sm text-[#C42323] mb-1">{role}</p>
-                <p className="font-manrope text-xs text-gray-500">{exp}</p>
+                <h3 className="font-montserrat font-bold text-sm md:text-lg text-[#333333] mb-1 group-hover:text-[#C42323] transition-colors leading-tight">{doc.name}</h3>
+                <p className="font-manrope text-xs md:text-sm text-[#C42323] mb-1">{doc.role}</p>
+                <p className="font-manrope text-[10px] md:text-xs text-gray-500">{doc.exp}</p>
             </div>
         );
 
-        /* СЛАЙДЕР (ЛОГИКА) */
+        /* --- СЛАЙДЕР ВРАЧЕЙ --- */
         const DoctorSlider = ({ doctors, onEnter, onLeave }) => {
             const [currentIndex, setCurrentIndex] = useState(0);
             const [itemsPerPage, setItemsPerPage] = useState(4);
@@ -146,27 +142,22 @@
 
             const nextSlide = () => { if (currentIndex < doctors.length - itemsPerPage) setCurrentIndex(prev => prev + 1); };
             const prevSlide = () => { if (currentIndex > 0) setCurrentIndex(prev => prev - 1); };
-
             const isEnd = currentIndex >= doctors.length - itemsPerPage;
             const isStart = currentIndex === 0;
 
             return (
                 <div className="relative group/slider">
-                    <div className="absolute top-1/2 -left-4 md:-left-12 -translate-y-1/2 z-20 opacity-0 group-hover/slider:opacity-100 transition-opacity">
-                        <button onClick={prevSlide} disabled={isStart} className={`p-3 rounded-full shadow-lg bg-white text-[#C42323] hover:bg-[#C42323] hover:text-white transition-all disabled:opacity-0`}>
-                            <ChevronLeft size={24} />
-                        </button>
+                    <div className="absolute top-1/2 -left-4 md:-left-12 -translate-y-1/2 z-20 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100 transition-opacity">
+                        <button onClick={prevSlide} disabled={isStart} className={`p-2 md:p-3 rounded-full shadow-lg bg-white text-[#C42323] hover:bg-[#C42323] hover:text-white transition-all disabled:opacity-0 disabled:cursor-not-allowed`}><ChevronLeft size={20} /></button>
                     </div>
-                    <div className="absolute top-1/2 -right-4 md:-right-12 -translate-y-1/2 z-20 opacity-0 group-hover/slider:opacity-100 transition-opacity">
-                        <button onClick={nextSlide} disabled={isEnd} className={`p-3 rounded-full shadow-lg bg-white text-[#C42323] hover:bg-[#C42323] hover:text-white transition-all disabled:opacity-0`}>
-                            <ChevronRight size={24} />
-                        </button>
+                    <div className="absolute top-1/2 -right-4 md:-right-12 -translate-y-1/2 z-20 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100 transition-opacity">
+                        <button onClick={nextSlide} disabled={isEnd} className={`p-2 md:p-3 rounded-full shadow-lg bg-white text-[#C42323] hover:bg-[#C42323] hover:text-white transition-all disabled:opacity-0 disabled:cursor-not-allowed`}><ChevronRight size={20} /></button>
                     </div>
                     <div className="overflow-hidden p-2 -m-2">
                         <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}>
                             {doctors.map((doc) => (
-                                <div key={doc.id} className="flex-shrink-0 px-3 box-border" style={{ width: `${100 / itemsPerPage}%` }}>
-                                    <DoctorCard name={doc.name} role={doc.role} exp={doc.exp} imageSrc={doc.img} onEnter={onEnter} onLeave={onLeave} />
+                                <div key={doc.id} className="flex-shrink-0 px-2 md:px-3 box-border" style={{ width: `${100 / itemsPerPage}%` }}>
+                                    <DoctorCard doc={doc} onEnter={onEnter} onLeave={onLeave} />
                                 </div>
                             ))}
                         </div>
@@ -218,7 +209,7 @@
                     </nav>
                     <div className="hidden lg:flex items-center gap-6">
                         <a href="tel:709111" className="font-manrope font-semibold hover:text-[#C42323] transition-colors">709-111</a>
-                        <button className="bg-[#C42323] text-white font-montserrat font-medium px-6 py-3 rounded-[20px] hover:bg-[#a01c1c] transition-all transform hover:scale-105 shadow-lg shadow-red-200" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                        <button className="bg-[#C42323] text-white font-montserrat font-medium px-6 py-3 rounded-[20px] hover:bg-[#a01c1c] transition-all transform hover:scale-105 shadow-lg shadow-red-200">
                         Записаться
                         </button>
                     </div>
@@ -235,13 +226,10 @@
                         {item}
                         </a>
                     ))}
-                    <button className="bg-[#C42323] text-white font-montserrat font-medium px-8 py-4 rounded-[20px] text-lg">
-                        Записаться на прием
-                    </button>
                     </div>
                 )}
 
-                {/* --- HERO SECTION (ОРИГИНАЛ) --- */}
+                {/* --- HERO SECTION --- */}
                 <section className="relative min-h-screen flex items-center bg-[#F5F1EE] pt-20 overflow-hidden">
                     <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-b from-white to-transparent opacity-50 z-0 pointer-events-none"></div>
                     <div className="absolute -right-20 top-1/4 w-[500px] h-[500px] bg-[#E0E2E4] rounded-full blur-3xl opacity-30 animate-pulse"></div>
@@ -252,23 +240,17 @@
                         <span className="w-2 h-2 rounded-full bg-[#C42323]"></span>
                         <span className="text-xs font-bold font-montserrat uppercase tracking-wider text-gray-500">Медицинская лицензия Л041-01166-58</span>
                         </div>
-                        
                         <h1 className="font-montserrat font-extrabold text-4xl md:text-6xl lg:text-7xl leading-[1.1] text-[#333333] mb-6">
-                        КРАСОТА,<br />
-                        ОСНОВАННАЯ<br />
-                        НА <span className="text-[#C42323]">НАУКЕ</span>
-                        <span className="inline-block w-3 h-3 md:w-4 md:h-4 bg-[#C42323] rounded-full ml-1 mb-1 md:mb-2"></span>
+                        КРАСОТА,<br />ОСНОВАННАЯ<br />НА <span className="text-[#C42323]">НАУКЕ</span>
                         </h1>
-                        
                         <p className="font-manrope text-lg text-gray-600 mb-10 max-w-lg leading-relaxed">
                         Врачебная косметология и гинекология в Пензе. Прогнозируемый результат, передовые лазерные технологии и отсутствие длительной реабилитации.
                         </p>
-                        
                         <div className="flex flex-col sm:flex-row gap-4">
                         <button className="bg-[#C42323] text-white font-montserrat font-bold px-8 py-4 rounded-[20px] hover:bg-[#a01c1c] transition-all flex items-center justify-center gap-2 shadow-xl shadow-red-200" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                             Записаться на консультацию <ArrowRight size={20} />
                         </button>
-                        <button className="bg-white text-[#333333] border border-gray-200 font-montserrat font-semibold px-8 py-4 rounded-[20px] hover:border-[#C42323] hover:text-[#C42323] transition-all" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                        <button className="bg-white text-[#333333] border border-gray-200 font-montserrat font-semibold px-8 py-4 rounded-[20px] hover:border-[#C42323] hover:text-[#C42323] transition-all">
                             Наши услуги
                         </button>
                         </div>
@@ -278,10 +260,12 @@
                         <div className="relative w-full h-full rounded-[40px] overflow-hidden shadow-2xl">
                             <img src="main.jpg" alt="Красивая кожа" className="w-full h-full object-cover" 
                                  onError={(e) => {e.target.style.display='none'; e.target.nextSibling.style.display='block'}} />
+                            
                             <svg className="w-full h-full object-cover bg-gray-100 hidden" viewBox="0 0 400 600" preserveAspectRatio="none">
                                 <rect width="100%" height="100%" fill="#e5e7eb"/>
                                 <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="#9ca3af" fontSize="20">Загрузите main.jpg</text>
                             </svg>
+                        
                             <div className="absolute bottom-10 left-10 bg-white/80 backdrop-blur-md p-6 rounded-[20px] shadow-lg max-w-xs animate-bounce-slow">
                                 <div className="flex items-center gap-3 mb-2">
                                 <div className="p-2 bg-[#F5F1EE] rounded-full text-[#C42323]"><Star size={16} fill="#C42323" /></div>
@@ -294,7 +278,7 @@
                     </div>
                 </section>
 
-                {/* --- PHILOSOPHY SECTION (ОРИГИНАЛ) --- */}
+                {/* --- PHILOSOPHY SECTION --- */}
                 <section className="py-24 bg-white" id="о клинике">
                     <div className="container mx-auto px-4 md:px-8">
                     <div className="grid md:grid-cols-2 gap-16">
@@ -305,9 +289,7 @@
                         </h2>
                         </div>
                         <div className="flex flex-col justify-center">
-                        <p className="font-manrope text-lg text-gray-600 mb-6">
-                            Expertmed — это центр врачебной косметологии, где безопасность пациента стоит на первом месте. Мы используем только сертифицированные препараты и оригинальное оборудование экспертного класса.
-                        </p>
+                        <p className="font-manrope text-lg text-gray-600 mb-6">Expertmed — это центр врачебной косметологии, где безопасность пациента стоит на первом месте. Мы используем только сертифицированные препараты и оригинальное оборудование экспертного класса.</p>
                         <ul className="space-y-4 font-manrope font-medium text-[#333333]">
                             {['Медицинская лицензия и строгие стандарты', 'Врачи с опытом более 10 лет', 'Оригинальные аппараты Fotona, BBL, Liftera', 'Отсутствие гиперкоррекции ("пластиковых" лиц)'].map((item, i) => (
                             <li key={i} className="flex items-start gap-3">
@@ -324,39 +306,27 @@
                 {/* --- SERVICES --- */}
                 <section className="py-24 bg-[#F5F1EE]" id="услуги">
                     <div className="container mx-auto px-4 md:px-8">
-                    <div className="flex justify-between items-end mb-16">
-                        <div>
-                        <span className="font-montserrat font-bold text-[#C42323] text-sm uppercase tracking-widest mb-2 block">Прайс-лист</span>
-                        <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333]">ПОПУЛЯРНЫЕ ПРОЦЕДУРЫ</h2>
-                        </div>
-                        <a href="#" className="hidden md:flex items-center gap-2 font-montserrat font-bold text-[#333333] hover:text-[#C42323] transition-colors">
-                        Весь прайс <ArrowRight size={20} />
-                        </a>
-                    </div>
-
+                    <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333] mb-12">ПОПУЛЯРНЫЕ ПРОЦЕДУРЫ</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <ServiceCard title="BBL HERO" desc="Фототерапия. Удаление пигментации, сосудов и лечение акне. Эффект фотошопа." price="от 6 000 ₽" tags={['Ровный тон', 'Сияние']} onEnter={textEnter} onLeave={textLeave} />
-                        <ServiceCard title="SMAS LIFTERA" desc="Безоперационная подтяжка лица. Четкий овал и упругость кожи." price="от 15 000 ₽" tags={['Лифтинг', 'Четкий контур']} onEnter={textEnter} onLeave={textLeave} />
-                        <ServiceCard title="FOTONA 4D" desc="Многоуровневое лазерное омоложение. Реконструкция кожи изнутри." price="от 31 800 ₽" tags={['Омоложение', 'Без боли']} onEnter={textEnter} onLeave={textLeave} />
-                        <ServiceCard title="Контурная пластика" desc="Коррекция губ, скул и подбородка филлерами премиум-класса (Belotero, Art Filler)." price="от 13 800 ₽" tags={['Объем', 'Гармония']} onEnter={textEnter} onLeave={textLeave} />
-                        <ServiceCard title="Гинекология" desc="Лазерное омоложение Fotona, лечение недержания, эстетическая коррекция." price="от 10 490 ₽" tags={['Здоровье', 'Комфорт']} onEnter={textEnter} onLeave={textLeave} />
-                        <ServiceCard title="Удаление новообразований" desc="Радиоволновой метод и лазер. Быстро, безопасно, с гистологией." price="от 700 ₽" tags={['Чистая кожа', 'Безопасность']} onEnter={textEnter} onLeave={textLeave} />
+                        <ServiceCard title="BBL HERO" desc="Фототерапия. Удаление пигментации, сосудов и лечение акне." price="от 6 000 ₽" tags={['Ровный тон', 'Сияние']} onEnter={textEnter} onLeave={textLeave} />
+                        <ServiceCard title="SMAS LIFTERA" desc="Безоперационная подтяжка лица." price="от 15 000 ₽" tags={['Лифтинг', 'Четкий контур']} onEnter={textEnter} onLeave={textLeave} />
+                        <ServiceCard title="FOTONA 4D" desc="Многоуровневое лазерное омоложение." price="от 31 800 ₽" tags={['Омоложение', 'Без боли']} onEnter={textEnter} onLeave={textLeave} />
+                        <ServiceCard title="Контурная пластика" desc="Коррекция губ, скул и подбородка филлерами." price="от 13 800 ₽" tags={['Объем', 'Гармония']} onEnter={textEnter} onLeave={textLeave} />
+                        <ServiceCard title="Гинекология" desc="Лазерное омоложение Fotona." price="от 10 490 ₽" tags={['Здоровье', 'Комфорт']} onEnter={textEnter} onLeave={textLeave} />
+                        <ServiceCard title="Удаление новообразований" desc="Радиоволновой метод и лазер." price="от 700 ₽" tags={['Чистая кожа', 'Безопасность']} onEnter={textEnter} onLeave={textLeave} />
                     </div>
                     </div>
                 </section>
 
-                {/* --- DOCTORS (СЛАЙДЕР С ВАШИМИ ВРАЧАМИ) --- */}
+                {/* --- DOCTORS --- */}
                 <section className="py-24 bg-white" id="врачи">
                     <div className="container mx-auto px-4 md:px-8">
-                    <div className="max-w-3xl mb-16">
-                        <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333] mb-6">ЭКСПЕРТИЗА В ЛИЦАХ</h2>
-                        <p className="font-manrope text-lg text-gray-600">Вы доверяете свое здоровье не бренду, а конкретному врачу. В нашей команде работают специалисты с высшим медицинским образованием.</p>
-                    </div>
-                    <DoctorSlider doctors={doctorsData} onEnter={textEnter} onLeave={textLeave} />
+                        <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl text-[#333333] mb-16">ЭКСПЕРТИЗА В ЛИЦАХ</h2>
+                        <DoctorSlider doctors={doctorsData} onEnter={textEnter} onLeave={textLeave} />
                     </div>
                 </section>
 
-                {/* --- BEFORE / AFTER (ОРИГИНАЛ) --- */}
+                {/* --- BEFORE / AFTER --- */}
                 <section className="py-24 bg-[#333333] text-white overflow-hidden">
                     <div className="container mx-auto px-4 md:px-8">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -365,31 +335,27 @@
                             <h2 className="font-montserrat font-extrabold text-3xl md:text-5xl mb-8">ДОКАЗАТЕЛЬНАЯ<br />ЭСТЕТИКА</h2>
                             <p className="font-manrope text-gray-300 text-lg mb-8 max-w-md">Мы документируем результаты в макро-качестве. Никакого фотошопа, только честная медицина и возможности вашего организма.</p>
                             <div className="flex gap-8">
-                            <div className="border-l-2 border-[#C42323] pl-4">
-                                <p className="font-montserrat font-bold text-3xl">100%</p>
-                                <p className="font-manrope text-sm text-gray-400 mt-1">Оригинальные препараты</p>
-                            </div>
-                            <div className="border-l-2 border-[#C42323] pl-4">
-                                <p className="font-montserrat font-bold text-3xl">4000+</p>
-                                <p className="font-manrope text-sm text-gray-400 mt-1">Довольных пациентов</p>
-                            </div>
+                                <div className="border-l-2 border-[#C42323] pl-4">
+                                    <p className="font-montserrat font-bold text-3xl">100%</p>
+                                    <p className="font-manrope text-sm text-gray-400 mt-1">Оригинальные препараты</p>
+                                </div>
+                                <div className="border-l-2 border-[#C42323] pl-4">
+                                    <p className="font-montserrat font-bold text-3xl">4000+</p>
+                                    <p className="font-manrope text-sm text-gray-400 mt-1">Довольных пациентов</p>
+                                </div>
                             </div>
                         </div>
-
                         <div className="relative">
                             <div className="grid grid-cols-2 gap-4">
                             <div className="bg-gray-800 rounded-[20px] aspect-[3/4] overflow-hidden relative group">
-                                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur px-3 py-1 rounded-full text-xs font-bold">ДО</div>
+                                <div className="absolute top-4 left-4 bg-black/50 backdrop-blur px-3 py-1 rounded-full text-xs font-bold z-10">ДО</div>
                                 <img src="before.jpg" className="w-full h-full object-cover" onError={(e) => e.target.style.display='none'} />
                                 <div className="w-full h-full bg-gray-700 absolute top-0 left-0 flex items-center justify-center text-gray-500 -z-10">Фото</div>
                             </div>
                             <div className="bg-gray-800 rounded-[20px] aspect-[3/4] overflow-hidden relative group translate-y-8">
-                                <div className="absolute top-4 left-4 bg-[#C42323] px-3 py-1 rounded-full text-xs font-bold">ПОСЛЕ</div>
+                                <div className="absolute top-4 left-4 bg-[#C42323] px-3 py-1 rounded-full text-xs font-bold z-10">ПОСЛЕ</div>
                                 <img src="after.jpg" className="w-full h-full object-cover" onError={(e) => e.target.style.display='none'} />
                                 <div className="w-full h-full bg-gray-600 absolute top-0 left-0 flex items-center justify-center text-gray-400 -z-10">Фото</div>
-                                <div className="absolute bottom-4 right-4 bg-white/10 backdrop-blur p-2 rounded-full">
-                                    <Check size={20} className="text-[#C42323]" />
-                                </div>
                             </div>
                             </div>
                         </div>
@@ -397,50 +363,43 @@
                     </div>
                 </section>
 
-                {/* --- LEAD FORM (ОРИГИНАЛ) --- */}
+                {/* --- LEAD FORM --- */}
                 <section className="py-24 bg-white" id="контакты">
                     <div className="container mx-auto px-4 md:px-8">
                     <div className="bg-[#F5F1EE] rounded-[40px] p-8 md:p-16 relative overflow-hidden">
-                        {/* Decor */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C42323] opacity-5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-
-                        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
+                        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 relative z-10">
                         <div>
                             <h2 className="font-montserrat font-extrabold text-3xl md:text-4xl text-[#333333] mb-6">ЗАПИШИТЕСЬ НА<br />ПЕРВИЧНЫЙ ПРИЕМ</h2>
                             <p className="font-manrope text-lg text-gray-600 mb-8">Администратор свяжется с вами в течение 15 минут, подберет удобное время и ответит на вопросы.</p>
                             <div className="space-y-6">
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-white rounded-full text-[#C42323] shadow-sm"><MapPin size={24} /></div>
-                                <div><p className="font-montserrat font-bold text-[#333333]">ул. Кирова, 67</p><p className="font-manrope text-sm text-gray-500">Центр города</p></div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-white rounded-full text-[#C42323] shadow-sm"><MapPin size={24} /></div>
-                                <div><p className="font-montserrat font-bold text-[#333333]">пр. Строителей, 50Б</p><p className="font-manrope text-sm text-gray-500">Арбеково</p></div>
-                            </div>
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-white rounded-full text-[#C42323] shadow-sm"><Phone size={24} /></div>
-                                <div><p className="font-montserrat font-bold text-[#333333]">709-111</p><p className="font-manrope text-sm text-gray-500">Единый номер</p></div>
-                            </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-white rounded-full text-[#C42323] shadow-sm"><MapPin size={24} /></div>
+                                    <div>
+                                        <p className="font-montserrat font-bold text-[#333333]">ул. Кирова, 67</p>
+                                        <p className="font-manrope text-sm text-gray-500">Центр города</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-white rounded-full text-[#C42323] shadow-sm"><MapPin size={24} /></div>
+                                    <div>
+                                        <p className="font-montserrat font-bold text-[#333333]">пр. Строителей, 50Б</p>
+                                        <p className="font-manrope text-sm text-gray-500">Арбеково</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-white rounded-full text-[#C42323] shadow-sm"><Phone size={24} /></div>
+                                    <div>
+                                        <p className="font-montserrat font-bold text-[#333333]">709-111</p>
+                                        <p className="font-manrope text-sm text-gray-500">Единый номер</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <form className="bg-white p-8 rounded-[30px] shadow-lg relative z-10">
+                        <form className="bg-white p-8 rounded-[30px] shadow-lg">
                             <div className="space-y-4">
-                                <div>
-                                <label className="block font-manrope text-sm font-semibold text-gray-700 mb-2">Ваше имя</label>
-                                <input type="text" className="w-full bg-[#F5F1EE] border-0 rounded-[15px] p-4 font-manrope focus:ring-2 focus:ring-[#C42323] outline-none transition-all" placeholder="Мария" />
-                                </div>
-                                <div>
-                                <label className="block font-manrope text-sm font-semibold text-gray-700 mb-2">Телефон</label>
+                                <input type="text" className="w-full bg-[#F5F1EE] border-0 rounded-[15px] p-4 font-manrope focus:ring-2 focus:ring-[#C42323] outline-none transition-all" placeholder="Ваше имя" />
                                 <input type="tel" className="w-full bg-[#F5F1EE] border-0 rounded-[15px] p-4 font-manrope focus:ring-2 focus:ring-[#C42323] outline-none transition-all" placeholder="+7 (999) 000-00-00" />
-                                </div>
-                                <div>
-                                <label className="block font-manrope text-sm font-semibold text-gray-700 mb-2">Комментарий (необязательно)</label>
-                                <textarea rows="3" className="w-full bg-[#F5F1EE] border-0 rounded-[15px] p-4 font-manrope focus:ring-2 focus:ring-[#C42323] outline-none transition-all" placeholder="Хочу записаться на BBL..."></textarea>
-                                </div>
-                                <button type="button" className="w-full bg-[#C42323] text-white font-montserrat font-bold py-4 rounded-[20px] hover:bg-[#a01c1c] transition-all shadow-lg shadow-red-100" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                                Отправить заявку
-                                </button>
+                                <button className="w-full bg-[#C42323] text-white font-montserrat font-bold py-4 rounded-[20px] hover:bg-[#a01c1c] transition-all shadow-lg shadow-red-100">Отправить заявку</button>
                                 <p className="text-xs text-gray-400 text-center mt-4">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных</p>
                             </div>
                         </form>
@@ -449,7 +408,6 @@
                     </div>
                 </section>
 
-                {/* --- FOOTER (ОРИГИНАЛ) --- */}
                 <footer className="bg-[#333333] text-white py-16 border-t border-gray-800">
                     <div className="container mx-auto px-4 md:px-8">
                     <div className="flex flex-col md:flex-row justify-between items-start mb-12">
@@ -503,4 +461,3 @@
     </script>
 </body>
 </html>
-
