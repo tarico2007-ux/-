@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гаевская М.Н. - ExpertMed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { margin: 0; font-family: 'Manrope', sans-serif; color: #333; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        .text-red-brand { color: #C42323; }
+        .bg-red-brand { background-color: #C42323; }
+    </style>
+</head>
+<body>
+
+    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur py-4 shadow-sm">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="flex flex-col leading-none">
+                <span class="font-montserrat font-bold text-2xl text-red-brand">expertmed</span>
+                <span class="font-montserrat text-xs tracking-widest">КОСМЕТОЛОГИЯ</span>
+            </a>
+            <a href="index.html" class="flex items-center gap-2 font-bold hover:text-red-brand transition">
+                <i data-lucide="arrow-left"></i> Назад на главную
+            </a>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-12">
+        <div class="container mx-auto px-4">
+            
+            <div class="grid lg:grid-cols-2 gap-12 items-center mb-24">
+                <div class="order-2 lg:order-1">
+                    <span class="bg-gray-100 px-3 py-1 rounded-full text-xs font-bold text-red-brand uppercase mb-4 inline-block">Top Expert</span>
+                    <h1 class="font-montserrat font-extrabold text-4xl md:text-6xl mb-6 leading-tight">
+                        Гаевская <br> Марина <br> <span class="text-red-brand">Николаевна</span>
+                    </h1>
+                    <div class="border-l-4 border-red-brand pl-4 mb-8">
+                        <p class="text-xl font-bold">Врач-дерматовенеролог</p>
+                        <p class="text-gray-500">Косметолог, высшая категория</p>
+                    </div>
+                    <p class="text-lg text-gray-600 mb-8">
+                        «Моя цель — не изменить вас до неузнаваемости, а раскрыть ресурс вашей кожи. Я работаю с лицом как с единой системой».
+                    </p>
+                    <div class="flex items-center gap-8">
+                        <div>
+                            <p class="font-montserrat font-bold text-3xl">32+</p>
+                            <p class="text-xs text-gray-400 uppercase">Года стажа</p>
+                        </div>
+                        <a href="#form" class="bg-red-brand text-white font-montserrat font-bold px-8 py-4 rounded-2xl hover:bg-red-700 transition shadow-lg shadow-red-200">
+                            Записаться
+                        </a>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <div class="rounded-[40px] overflow-hidden shadow-2xl aspect-[3/4] relative bg-gray-100">
+                        <img src="doc2.jpg" alt="Гаевская М.Н." class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <h2 class="font-montserrat font-extrabold text-3xl text-center mb-12">УСЛУГИ И ЦЕНЫ</h2>
+                <div class="bg-gray-50 rounded-[30px] p-8">
+                    <ul class="space-y-4">
+                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
+                            <span>4D Омоложение (Fotona)</span>
+                            <span class="font-bold">от 31 800 ₽</span>
+                        </li>
+                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
+                            <span>BBL Forever Young</span>
+                            <span class="font-bold">от 18 000 ₽</span>
+                        </li>
+                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
+                            <span>Контурная пластика губ</span>
+                            <span class="font-bold">от 16 500 ₽</span>
+                        </li>
+                        <li class="flex justify-between border-b border-dashed border-gray-300 pb-2">
+                            <span>Биоревитализация</span>
+                            <span class="font-bold">от 14 000 ₽</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
